@@ -1,0 +1,5 @@
+#abc {
+    background-image: url("tree-happy.gif"), url("wind-wish.gif");
+    background-repeat: no-repeat, repeat;
+    background-color: #cccccc;
+}
