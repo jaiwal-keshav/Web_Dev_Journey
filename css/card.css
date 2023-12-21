@@ -1,0 +1,66 @@
+
+div {
+    height: 300px;
+    width: 350px;
+    background-color: rgb(243, 239, 239);
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    align-items: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+}
+
+img {
+    height: 200px;
+    width: 350px;
+    border-radius: 10px;
+}
+
+h2 {
+    font-size: medium;
+}
+
+#l1 {
+    color: rgb(57, 92, 219);
+    font-weight: 600;
+    font-size: smaller;
+}
+
+#l2 {
+    color: rgb(95, 95, 90);
+    font-weight: 600;
+    text-decoration: line-through;
+    font-size: smaller;
+
+}
+
+#l3 {
+    width: 70px;
+    height: 20px;
+    background-color: rgb(32, 203, 151);
+    border-radius: 5px;
+    text-align: center;
+    color: white;
+    font-weight: 600;
+    font-size: 11px;
+}
+
+#l3 {
+    width: 120px; /* Increase width as needed */
+    height: 30px;
+    background-color: rgb(32, 203, 151);
+    border-radius: 3px;
+    text-align: center;
+    color: white;
+    font-weight: 600;
+    font-size: 11px; /* Increase font size as needed */
+    margin: 10px auto; /* Center the label */
+}
+
+hr {
+    margin: 10px 0;
+    border: none;
+    border-top: 2px solid #333;
+    width: 50%;
+}
