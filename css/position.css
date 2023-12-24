@@ -1,0 +1,41 @@
+.div1{
+    height: 400px;
+    width: 400px;
+    background-color: aqua;
+    align-items: center;
+    background-image: url("../html/class-2/love.png");
+    background-size: 100%;
+}
+
+img{
+    height: 300px;
+    width: 300px;
+}
+
+#top-left{
+    position: relative;
+    top: 10px;
+}
+
+#top-right{
+    position: absolute;
+    left: 300px;
+    top: 0px;
+}
+
+#bottom-left{
+    position: relative;
+    top: 300px;
+}
+
+#bottom-right{
+    position: absolute;
+    top: 360px;
+    left: 300px;
+}
+
+#center{
+    position: absolute;
+    top: 170px;
+    left: 150px;
+}
