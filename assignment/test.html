@@ -1,0 +1,464 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #canvas {
+            position: relative;
+            height: 400px;
+            width: 600px;
+            border: 1px solid black;
+        }
+        .text {
+            position: absolute;
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas"></div>
+    <input id="text" type="text" placeholder="Enter text">
+    <select id="font">
+        <option value="Arial">Arial</option>
+        <option value="Verdana">Verdana</option>
+        <option value="Courier New">Courier New</option>
+    </select>
+    <input id="size" type="number" min="1" max="100" value="16">
+    <input id="color" type="color">
+    <button onclick="addText()">Add Text</button>
+
+    <script>
+        var selectedElement = null;
+        var x = 0, y = 0;
+
+        function addText() {
+            var text = document.getElementById('text').value;
+            var font = document.getElementById('font').value;
+            var size = document.getElementById('size').value;
+            var color = document.getElementById('color').value;
+
+            var newText = document.createElement('div');
+            newText.style.fontFamily = font;
+            newText.style.fontSize = size + 'px';
+            newText.style.color = color;
+            newText.textContent = text;
+            newText.className = 'text';
+            newText.onmousedown = function(e) {
+                selectedElement = this;
+                x = e.clientX - selectedElement.getBoundingClientRect().left;
+                y = e.clientY - selectedElement.getBoundingClientRect().top;
+            };
+            document.getElementById('canvas').appendChild(newText);
+        }
+
+        document.onmouseup = function() {
+            selectedElement = null;
+        };
+
+        document.onmousemove = function(e) {
+            var x_new = e.clientX - x;
+            var y_new = e.clientY - y;
+            if (selectedElement) {
+                selectedElement.style.left = x_new + 'px';
+                selectedElement.style.top = y_new + 'px';
+            }
+        };
+    </script>
+</body>
+</html>
+ -->
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #canvas {
+            position: relative;
+            height: 400px;
+            width: 600px;
+            border: 1px solid black;
+        }
+        .text {
+            position: absolute;
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas"></div>
+    <input id="text" type="text" placeholder="Enter text">
+    <select id="font">
+        <option value="Arial">Arial</option>
+        <option value="Verdana">Verdana</option>
+        <option value="Courier New">Courier New</option>
+    </select>
+    <input id="size" type="number" min="1" max="100" value="16">
+    <input id="color" type="color">
+    <button onclick="addText()">Add Text</button>
+    <button onclick="undo()">Undo</button>
+    <button onclick="redo()">Redo</button>
+
+    <script>
+        var selectedElement = null;
+        var x = 0, y = 0;
+        var undoStack = [], redoStack = [];
+
+        function addText() {
+            var text = document.getElementById('text').value;
+            var font = document.getElementById('font').value;
+            var size = document.getElementById('size').value;
+            var color = document.getElementById('color').value;
+
+            var newText = document.createElement('div');
+            newText.style.fontFamily = font;
+            newText.style.fontSize = size + 'px';
+            newText.style.color = color;
+            newText.textContent = text;
+            newText.className = 'text';
+            newText.onmousedown = function(e) {
+                selectedElement = this;
+                x = e.clientX - selectedElement.getBoundingClientRect().left;
+                y = e.clientY - selectedElement.getBoundingClientRect().top;
+            };
+            document.getElementById('canvas').appendChild(newText);
+            undoStack.push(newText);
+        }
+
+        function undo() {
+            if (undoStack.length > 0) {
+                var lastElement = undoStack.pop();
+                redoStack.push(lastElement);
+                lastElement.remove();
+            }
+        }
+
+        function redo() {
+            if (redoStack.length > 0) {
+                var lastElement = redoStack.pop();
+                undoStack.push(lastElement);
+                document.getElementById('canvas').appendChild(lastElement);
+            }
+        }
+
+        document.onmouseup = function() {
+            selectedElement = null;
+        };
+
+        document.onmousemove = function(e) {
+            var x_new = e.clientX - x;
+            var y_new = e.clientY - y;
+            if (selectedElement) {
+                selectedElement.style.left = x_new + 'px';
+                selectedElement.style.top = y_new + 'px';
+            }
+        };
+    </script>
+</body>
+</html>
+
+<!-- 
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #canvas {
+            position: relative;
+            height: 400px;
+            width: 600px;
+            border: 1px solid black;
+        }
+        .text {
+            position: absolute;
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas" onclick="createInput(event)"></div>
+    <select id="font">
+        <option value="Arial">Arial</option>
+        <option value="Verdana">Verdana</option>
+        <option value="Courier New">Courier New</option>
+    </select>
+    <input id="size" type="number" min="1" max="100" value="16">
+    <input id="color" type="color">
+    <button onclick="undo()">Undo</button>
+    <button onclick="redo()">Redo</button>
+
+    <script>
+        var selectedElement = null;
+        var x = 0, y = 0;
+        var undoStack = [], redoStack = [];
+
+        function createInput(e) {
+            var input = document.createElement('input');
+            input.style.position = 'absolute';
+            input.style.left = e.clientX + 'px';
+            input.style.top = e.clientY + 'px';
+            input.onkeydown = function(e) {
+                if (e.key === 'Enter') {
+                    addText(this.value, e.clientX, e.clientY);
+                    this.remove();
+                }
+            };
+            document.getElementById('canvas').appendChild(input);
+            input.focus();
+        }
+
+        function addText(text, x, y) {
+            var font = document.getElementById('font').value;
+            var size = document.getElementById('size').value;
+            var color = document.getElementById('color').value;
+
+            var newText = document.createElement('div');
+            newText.style.fontFamily = font;
+            newText.style.fontSize = size + 'px';
+            newText.style.color = color;
+            newText.textContent = text;
+            newText.className = 'text';
+            newText.style.left = x + 'px';
+            newText.style.top = y + 'px';
+            newText.onmousedown = function(e) {
+                selectedElement = this;
+                x = e.clientX - selectedElement.getBoundingClientRect().left;
+                y = e.clientY - selectedElement.getBoundingClientRect().top;
+            };
+            document.getElementById('canvas').appendChild(newText);
+            undoStack.push(newText);
+        }
+
+        function undo() {
+            if (undoStack.length > 0) {
+                var lastElement = undoStack.pop();
+                redoStack.push(lastElement);
+                lastElement.remove();
+            }
+        }
+
+        function redo() {
+            if (redoStack.length > 0) {
+                var lastElement = redoStack.pop();
+                undoStack.push(lastElement);
+                document.getElementById('canvas').appendChild(lastElement);
+            }
+        }
+
+        document.onmouseup = function() {
+            selectedElement = null;
+        };
+
+        document.onmousemove = function(e) {
+            var x_new = e.clientX - x;
+            var y_new = e.clientY - y;
+            if (selectedElement) {
+                selectedElement.style.left = x_new + 'px';
+                selectedElement.style.top = y_new + 'px';
+            }
+        };
+    </script>
+</body>
+</html> -->
+
+
+
+<!-- best  -->
+
+<!-- 
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #canvas {
+            position: relative;
+            height: 400px;
+            width: 600px;
+            border: 1px solid black;
+        }
+        .text {
+            position: absolute;
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas"></div>
+    <input id="text" type="text" placeholder="Enter text">
+    <select id="font">
+        <option value="Arial">Arial</option>
+        <option value="Verdana">Verdana</option>
+        <option value="Courier New">Courier New</option>
+    </select>
+    <input id="size" type="number" min="1" max="100" value="16">
+    <input id="color" type="color">
+    <button onclick="addText()">Add Text</button>
+
+    <script>
+        var selectedElement = null;
+        var x = 0, y = 0;
+
+        function addText() {
+            var text = document.getElementById('text').value;
+            var font = document.getElementById('font').value;
+            var size = document.getElementById('size').value;
+            var color = document.getElementById('color').value;
+
+            var newText = document.createElement('div');
+            newText.style.fontFamily = font;
+            newText.style.fontSize = size + 'px';
+            newText.style.color = color;
+            newText.textContent = text;
+            newText.className = 'text';
+            newText.onmousedown = function(e) {
+                selectedElement = this;
+                x = e.clientX - selectedElement.getBoundingClientRect().left;
+                y = e.clientY - selectedElement.getBoundingClientRect().top;
+            };
+            document.getElementById('canvas').appendChild(newText);
+        }
+
+        document.onmouseup = function() {
+            selectedElement = null;
+        };
+
+        document.onmousemove = function(e) {
+            var x_new = e.clientX - x;
+            var y_new = e.clientY - y;
+            if (selectedElement) {
+                selectedElement.style.left = x_new + 'px';
+                selectedElement.style.top = y_new + 'px';
+            }
+        };
+    </script>
+</body>
+</html> -->
+
+
+
+
+FINE...
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #canvas {
+            position: relative;
+            width: 500px;
+            height: 300px;
+            border: 1px solid #ccc;
+        }
+
+        .draggable {
+            position: absolute;
+            cursor: move;
+        }
+
+        select, input {
+            margin-bottom: 10px;
+        }
+    </style>
+    <title>Text Editor</title>
+</head>
+<body>
+    <label for="font">Font:</label>
+    <select id="font">
+        <option value="Arial, sans-serif">Arial</option>
+        <option value="Times New Roman, serif">Times New Roman</option>
+        <option value="Courier New, monospace">Courier New</option>
+    </select>
+
+    <label for="fontSize">Font Size:</label>
+    <input type="number" id="fontSize" value="16">
+
+    <label for="color">Text Color:</label>
+    <input type="color" id="color" value="#000000">
+
+    <button onclick="addText()">Add Text</button>
+
+    <div id="canvas" contenteditable="true"></div>
+
+    <script>
+        function addText() {
+            const canvas = document.getElementById('canvas');
+            const text = document.createElement('div');
+            text.className = 'draggable';
+            text.contentEditable = true;
+            text.innerText = 'New Text';
+            canvas.appendChild(text);
+
+            makeDraggable(text);
+            addSelectListeners(text);
+        }
+
+        function makeDraggable(element) {
+            let offsetX, offsetY, isDragging = false;
+
+            element.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                offsetX = e.clientX - element.getBoundingClientRect().left;
+                offsetY = e.clientY - element.getBoundingClientRect().top;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+
+                const x = e.clientX - offsetX;
+                const y = e.clientY - offsetY;
+
+                element.style.left = `${x}px`;
+                element.style.top = `${y}px`;
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+        }
+
+        function addSelectListeners(element) {
+            element.addEventListener('click', () => {
+                applyTextStyle(element);
+            });
+        }
+
+        function applyTextStyle(element) {
+            const fontSelect = document.getElementById('font');
+            const fontSizeInput = document.getElementById('fontSize');
+            const colorInput = document.getElementById('color');
+
+            // Automatically select the text content
+            const selection = window.getSelection();
+            const range = document.createRange();
+            range.selectNodeContents(element);
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+            fontSelect.value = element.style.fontFamily || 'Arial, sans-serif';
+            fontSizeInput.value = parseInt(element.style.fontSize, 10) || 16;
+            colorInput.value = element.style.color || '#000000';
+
+            fontSelect.addEventListener('change', () => {
+                element.style.fontFamily = fontSelect.value;
+            });
+
+            fontSizeInput.addEventListener('input', () => {
+                element.style.fontSize = `${fontSizeInput.value}px`;
+            });
+
+            colorInput.addEventListener('input', () => {
+                element.style.color = colorInput.value;
+            });
+
+            // Disable content editing for existing text
+            element.contentEditable = false;
+        }
+    </script>
+</body>
+</html>

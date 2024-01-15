@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #canvas {
+            position: relative;
+            width: 800px;
+            height: 500px;
+            border: 5px solid #040101;
+            border-radius: 5%;
+            user-select: none; /* Disable text selection in the canvas */
+        }
+
+        .draggable {
+            position: absolute;
+            cursor: move;
+        }
+
+        select, input {
+            margin-bottom: 10px;
+        }
+    </style>
+    <title>Text Editor</title>
+</head>
+<body>
+    <label for="font">Font:</label>
+
+    <select id="font">
+        <option value="Arial, sans-serif">Arial</option>
+        <option value="Times New Roman, serif">Times New Roman</option>
+        <option value="Courier New, monospace">Courier New</option>
+        <option value="Verdana, sans-serif">Verdana</option>
+        <option value="Georgia, serif">Georgia</option>
+        <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        <option value="Impact, sans-serif">Impact</option>
+        <option value="Trebuchet MS, sans-serif">Trebuchet MS</option>
+        <option value="Palatino Linotype, serif">Palatino Linotype</option>
+        <option value="Lucida Sans Unicode, sans-serif">Lucida Sans Unicode</option>
+    </select>
+
+    <label for="fontSize">Font Size:</label>
+    <input type="number" id="fontSize" value="16">
+
+    <label for="color">Text Color:</label>
+    <input type="color" id="color" value="#000000">
+
+    <button onclick="addText()">Add Text</button>
+    <button>Undo</button>
+    <button>Redo</button>
+
+
+    <div id="canvas"></div>
+
+    <script>
+        let selectedText = null;
+        let fontSelect, fontSizeInput, colorInput;
+
+        function addText() {
+            const canvas = document.getElementById('canvas');
+            const text = document.createElement('div');
+            text.className = 'draggable';
+            text.contentEditable = true;
+            text.innerText = 'New Text';
+            text.style.padding = '10px';  // Add padding here
+            canvas.appendChild(text);
+            text.style.outline = 'none';
+
+
+            makeDraggable(text);
+            addSelectListeners(text);
+        }
+
+        function makeDraggable(element) {
+            let offsetX, offsetY, isDragging = false;
+
+            element.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                offsetX = e.clientX - element.getBoundingClientRect().left;
+                offsetY = e.clientY - element.getBoundingClientRect().top;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+
+                const x = e.clientX - offsetX;
+                const y = e.clientY - offsetY;
+
+                element.style.left = `${x}px`;
+                element.style.top = `${y}px`;
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+        }
+
+        function addSelectListeners(element) {
+            element.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevents the click event from reaching the document
+                selectText(element);
+            });
+        }
+
+
+
+
+        function addSelectListeners(element) {
+            element.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevents the click event from reaching the document
+                selectText(element);
+            });
+        }
+
+
+
+
+        function selectText(element) {
+            // Reset styling for previously selected text
+            if (selectedText) {
+                selectedText.style.outline = 'none';
+            }
+
+            // Set styling for the currently selected text
+            selectedText = element;
+            selectedText.style.outline = '2px dotted blue ';
+
+            // Apply styling controls
+            applyTextStyle(selectedText);
+        }
+
+        function applyTextStyle(element) {
+            if (!fontSelect) {
+                fontSelect = document.getElementById('font');
+                fontSizeInput = document.getElementById('fontSize');
+                colorInput = document.getElementById('color');
+
+                fontSelect.addEventListener('change', () => {
+                    if (selectedText) {
+                        selectedText.style.fontFamily = fontSelect.value;
+                    }
+                });
+
+                fontSizeInput.addEventListener('input', () => {
+                    if (selectedText) {
+                        selectedText.style.fontSize = `${fontSizeInput.value}px`;
+                    }
+                });
+
+                colorInput.addEventListener('input', () => {
+                    if (selectedText) {
+                        selectedText.style.color = colorInput.value;
+                    }
+                });
+            }
+
+            fontSelect.value = element.style.fontFamily || 'Arial, sans-serif, ';
+            fontSizeInput.value = parseInt(element.style.fontSize, 10) || 16;
+            colorInput.value = element.style.color || '#000000';
+        }
+
+        canvas.addEventListener('click', () => {
+            if (selectedText) {
+                selectedText.style.outline = 'none';
+                selectedText = null;
+            }
+        });
+    </script>
+</body>
+</html>

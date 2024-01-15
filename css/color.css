@@ -1,0 +1,79 @@
+/* .color-wheel-container {
+    width: 200px;
+    height: 200px;
+    position: relative;
+  }
+
+  .color-wheel {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 180px;
+    height: 180px;
+    border: 10px solid #fff;
+    border-radius: 50%;
+    background: conic-gradient(
+      #f00 0% 10%,
+      #ff0 10% 20%,
+      #0f0 20% 30%,
+      #0ff 30% 40%,
+      #00f 40% 50%,
+      #f0f 50% 60%,
+      #f00 60% 70%,
+      #ff0 70% 80%,
+      #0f0 80% 90%,
+      #0ff 90% 100%
+    );
+    transition: transform 1s ease-in-out;
+  }
+
+  .color-wheel:hover {
+    animation: rotateColors 2s linear infinite;
+  }
+
+  @keyframes rotateColors {
+    0% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(360deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  } */
+
+  .color-wheel {
+    width: 200px; /* Adjust width as needed */
+    height: 200px; /* Adjust height as needed */
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  
+  .wheel {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotate(30deg);
+    transition: transform 0.5s ease-in-out;
+    background: conic-gradient(
+      red 0deg,
+      yellow 60deg,
+      green 120deg,
+      blue 180deg,
+      indigo 240deg,
+      violet 300deg
+    );
+  }
+  
+  .color-wheel:hover .wheel {
+    transform: rotate(360deg); /* Adjust rotation amount as needed */
+  }
+  
+  .color-wheel:hover .wheel:hover {
+    transform: rotate(0deg);
+  }
+  

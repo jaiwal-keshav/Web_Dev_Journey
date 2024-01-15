@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+            body {
+            position: absolute;
+            font-family: Arial, sans-serif;
+            background-size: cover;
+            display: flex;
+            /* justify-content: space-evenly; */
+            gap: 20px ;
+            align-items:baseline;
+            flex-wrap:wrap;
+            height: 100vh;
+            margin: 0;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.7); 
+        }
+
+        #canvas {
+            position: fixed;
+            left: 80px; /* Adjust the left property as needed */
+            top: 90px; /* Adjust the top property as needed */
+            width: 55vw;
+            height: 60vh;
+            border-radius: 4%;
+            border: 1px solid #ccc;
+            user-select: none; /* Disable text selection in the canvas */
+            background-color: rgb(255, 255, 255);
+            padding: 20px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .draggable {
+            position: absolute;
+            cursor: move;
+        }
+
+        select,
+        input,
+        button {
+            margin-top: 45%;
+            margin-bottom: 10px;
+            padding: 5px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+
+        button {
+            margin-top: 45%;
+            background-color: #008CBA; 
+            color: white;
+        }
+
+        #buttons-container {
+            margin-top: 45%;
+            display: flex;
+            flex-direction:column;
+            align-items: flex-end;
+            margin-left: 10px;
+        }
+        #font, #fontSize, #color, #fontStyle{
+            margin-top: 60%;
+            display: flex;
+            flex-direction: column;
+            color: rgb(0, 0, 0);
+
+        }
+        label{
+            margin-top: 40%;
+        }
+
+        h1{
+            margin-top: 30px;
+            position: absolute;
+            margin-left: 30px;
+        }
+    </style>
+    <title>Celebrare-Intern</title>
+    <link rel="icon" href="favicon.png">
+</head>
+
+<body>
+    <h1>Celebrare</h1>
+    <label for="font">Font:</label>
+    <select id="font">
+        <option value="Arial, sans-serif">Arial</option>
+        <option value="Times New Roman, serif">Times New Roman</option>
+        <option value="Courier New, monospace">Courier New</option>
+    </select>
+
+    <label for="fontSize">Font Size:</label>
+    <input type="number" id="fontSize" value="16">
+
+    <label for="color">Text Color:</label>
+    <input type="color" id="color" value="#000000">
+
+    <label for="fontStyle">Font Style:</label>
+    <select id="fontStyle">
+        <option value="normal">Normal</option>
+        <option value="italic">Italic</option>
+        <option value="oblique">Oblique</option>
+    </select>
+
+    <button onclick="addText()">Add Text</button>
+
+    <div id="canvas"></div>
+
+    <script>
+        let selectedText = null;
+        let fontSelect, fontSizeInput, colorInput, fontStyleSelect;
+
+        function addText() {
+            const canvas = document.getElementById('canvas');
+            const text = document.createElement('div');
+            text.className = 'draggable';
+            text.contentEditable = true;
+            text.innerText = 'New Text';
+            text.style.color = 'black';
+            text.style.padding = '10px'; // Add padding here
+            canvas.appendChild(text);
+            text.style.outline = 'none';
+
+            makeDraggable(text);
+            addSelectListeners(text);
+        }
+
+        function makeDraggable(element) {
+            let offsetX, offsetY, isDragging = false;
+
+            element.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                offsetX = e.clientX - element.getBoundingClientRect().left;
+                offsetY = e.clientY - element.getBoundingClientRect().top;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+
+                const x = e.clientX - offsetX;
+                const y = e.clientY - offsetY;
+
+                element.style.left = `${x}px`;
+                element.style.top = `${y}px`;
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+        }
+
+        function addSelectListeners(element) {
+            element.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevents the click event from reaching the document
+                selectText(element);
+            });
+        }
+
+        function selectText(element) {
+            // Reset styling for previously selected text
+            if (selectedText) {
+                selectedText.style.outline = 'none';
+            }
+
+            // Set styling for the currently selected text
+            selectedText = element;
+            selectedText.style.outline = '2px dotted blue ';
+
+            // Apply styling controls
+            applyTextStyle(selectedText);
+        }
+
+        function applyTextStyle(element) {
+            if (!fontSelect) {
+                fontSelect = document.getElementById('font');
+                fontSizeInput = document.getElementById('fontSize');
+                colorInput = document.getElementById('color');
+                fontStyleSelect = document.getElementById('fontStyle');
+
+                fontSelect.addEventListener('change', () => {
+                    if (selectedText) {
+                        selectedText.style.fontFamily = fontSelect.value;
+                    }
+                });
+
+                fontSizeInput.addEventListener('input', () => {
+                    if (selectedText) {
+                        selectedText.style.fontSize = `${fontSizeInput.value}px`;
+                    }
+                });
+
+                colorInput.addEventListener('input', () => {
+                    if (selectedText) {
+                        selectedText.style.color = colorInput.value;
+                    }
+                });
+
+                fontStyleSelect.addEventListener('change', () => {
+                    if (selectedText) {
+                        selectedText.style.fontStyle = fontStyleSelect.value;
+                    }
+                });
+            }
+
+            fontSelect.value = element.style.fontFamily || 'Arial, sans-serif';
+            fontSizeInput.value = parseInt(element.style.fontSize, 10) || 16;
+            colorInput.value = element.style.color || '#000000';
+            fontStyleSelect.value = element.style.fontStyle || 'normal';
+        }
+
+        document.getElementById('canvas').addEventListener('click', () => {
+            if (selectedText) {
+                selectedText.style.outline = 'none';
+                selectedText = null;
+            }
+        });
+    </script>
+</body>
+
+</html>

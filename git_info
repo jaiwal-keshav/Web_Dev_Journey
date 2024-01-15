@@ -1,1 +1,7 @@
 TLDR; No || Explanation: To communicate with the remote git repo you need to link it with a folder in your local machine (git init). After this, add the remote repo link (git remote add origin <URL>) and pull it (git pull origin master). Now, once your local folder is synchronized with the remote repo you're free to add any new files (git add <file>, git commit -m <message> and git push origin master). This would be the simplest way to do it. Remember, git stores all the information in your that local folder (in .git/ folder) which you just linked with the remote repo and its responsibility is to maintain all git metadata (credentials, git history...). Without this process in place, it would be difficult for git to track historical information about the project. I hope you understand the reason behind this.
+
+
+git init
+git add .
+git commit -m <message>
+git push origin main

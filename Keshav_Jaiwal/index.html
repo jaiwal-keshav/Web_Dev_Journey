@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celebrare-Intern</title>
+    <link rel="icon" href="favicon.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1>Celebrare</h1>
+    <label for="font">Font:</label>
+    <select id="font">
+        <option value="Arial, sans-serif">Arial</option>
+        <option value="Times New Roman, serif">Times New Roman</option>
+        <option value="Courier New, monospace">Courier New</option>
+        <option value="Verdana, sans-serif">Verdana</option>
+        <option value="Georgia, serif">Georgia</option>
+        <option value="Comic Sans MS, cursive">Comic Sans MS</option>
+        <option value="Impact, sans-serif">Impact</option>
+        <option value="Trebuchet MS, sans-serif">Trebuchet MS</option>
+        <option value="Palatino Linotype, serif">Palatino Linotype</option>
+        <option value="Lucida Sans Unicode, sans-serif">Lucida Sans Unicode</option>
+    </select>
+
+    <label for="fontSize">Font Size:</label>
+    <input type="number" id="fontSize" value="16">
+
+    <label for="color">Text Color:</label>
+    <input type="color" id="color" value="#000000">
+
+    <label for="fontStyle">Font Style:</label>
+    <select id="fontStyle">
+        <option value="normal">Normal</option>
+        <option value="italic">Italic</option>
+        <option value="oblique">Oblique</option>
+    </select>
+
+
+    <button onclick="addText()">Add Text</button>
+
+    <div id="canvas"></p>
+    </div>
+
+
+    <script src="script.js"></script>
+</body>
+
+</html>
